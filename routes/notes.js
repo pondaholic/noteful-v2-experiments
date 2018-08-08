@@ -94,10 +94,9 @@ router.put('/:id', (req, res, next) => {
 		
 	knex('notes')
 		.where('id', id)
-		.update( {title: 'The Book Thief'} )
-		.returning(['id', 'title', 'content'])
+		.update(updateObj, ['id', 'title', 'content'])
 		.then(result => {
-			res.json(result[0]);
+			res.json(result);
 		})
 		.catch(err => {
 			next(err);
@@ -130,7 +129,6 @@ router.post('/', (req, res, next) => {
 
 	knex('notes')
 		.insert(req.body)
-		.returning(['id', 'title', 'content'])
 		.then(item => {
 			res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
 		})
