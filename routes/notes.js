@@ -14,7 +14,7 @@ const knex = require('../knex');
 
 // Get All (and search by query)
 router.get('/', (req, res, next) => {
-	const { searchTerm } = req.query.searchTerm;
+	const { searchTerm } = req.query;
 	
 	knex
 		.select('notes.id', 'title', 'content')
@@ -26,7 +26,7 @@ router.get('/', (req, res, next) => {
 		})
 		.orderBy('notes.id')
 		.then(results => {
-			res.json(JSON.stringify(results, null, 2));
+			res.json(results);
 		})
 		.catch(err => {
 			next(err);
@@ -49,10 +49,13 @@ router.get('/:id', (req, res, next) => {
 		.from('notes')
 		.where('id', id)
 		.then(result => {
-			res.json(result).status(200);
+			if (!result) {
+				next({status : 404});
+			}
+			res.json(result);
 		})
 		.catch(err => {
-			next(err).status(404);
+			next(err);
 		});
 
 	// notes.find(id)
