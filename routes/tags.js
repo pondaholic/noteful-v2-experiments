@@ -56,7 +56,10 @@ router.delete('/:id', (req, res, next) => {
 		.where('id', id)
 		.del()
 		.then(results =>
-			res.json({status: 204}));
+			res.json({status: 204}))
+		.catch(err => {
+			next(err);
+		})
 });
 
 router.post('/', (req, res, next) => {

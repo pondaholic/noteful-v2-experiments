@@ -18,9 +18,11 @@ router.get('/', (req, res, next) => {
 	const { folderId }  = req.query;
 	
 	knex
-		.select('notes.id', 'title', 'content', 'folders.id as folderId', 'folders.name as folderName')
+		.select('notes.id', 'title', 'content', 'folders.id as folderId', 'folders.name as folderName', 'notes_tags.note_id as noteTagsId', 'tags.id as tagId', 'tags.name as tagName')
 		.from('notes')
 		.leftJoin('folders', 'notes.folder_id', 'folders.id')
+		.leftJoin('notes_tags', 'notes.id', 'notes_tags.note_id')
+		.leftJoin('tags', 'notes_tags.tag_id','tags.id' )
 		.modify(queryBuilder => {
 			if (searchTerm) {
 				queryBuilder.where('title', 'like', `%${searchTerm}%`);
@@ -153,6 +155,9 @@ router.delete('/:id', (req, res, next) => {
 		.del()
 		.then(result => {
 			res.json('deleted');
+		})
+		.catch(err => {
+			next(err);
 		});
 
 	// notes.delete(id)
