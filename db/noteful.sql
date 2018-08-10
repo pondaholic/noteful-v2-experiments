@@ -29,7 +29,8 @@ CREATE TABLE notes
 INSERT INTO notes
 	(title, content, folder_id) VALUES
 		('Paradise Lost', 'Epic poem', 100),
-		('The Stranger', 'Camus on alienation', 103);
+		('The Stranger', 'Camus on alienation', 103),
+		('David Copperfield', 'Dickensian fiction', 102);
 
 CREATE TABLE tags
 (
@@ -44,9 +45,11 @@ CREATE TABLE notes_tags
 );
 
 INSERT INTO tags (name) VALUES
-	('My Tag 1'),
-	('My Tag 2'),
-	('My Tag 3');
+	('Philip Larkin'),
+	('Emily Dickenson'),
+	('JM Coetzee');
 
 INSERT INTO notes_tags (note_id, tag_id) VALUES
-	(1, 2);
+	(1, 2),
+	(2, 2),
+	(3, 1);
