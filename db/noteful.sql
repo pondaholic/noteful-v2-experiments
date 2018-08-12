@@ -1,38 +1,27 @@
+DROP TABLE IF EXISTS recaps;
 DROP TABLE IF EXISTS notes_tags;
+DROP TABLE IF EXISTS authors;
 DROP TABLE IF EXISTS notes;
-DROP TABLE IF EXISTS folders;
-DROP TABLE IF EXISTS tags;
-
-CREATE TABLE folders 
-(
-    id serial PRIMARY KEY,
-    name text NOT NULL
-);
-
-ALTER SEQUENCE folders_id_seq RESTART WITH 100;
-
-INSERT INTO folders (name) VALUES
-  ('Archive'),
-  ('Drafts'),
-  ('Personal'),
-  ('Work');
 
 CREATE TABLE notes
 (
 	id serial PRIMARY KEY,
 	title text NOT NULL,
-	content text,
-	created timestamp DEFAULT now(),
-	folder_id int REFERENCES folders(id) ON DELETE SET NULL
+	content text FOREIGN KEY,
+	created timestamp DEFAULT now()
 );
 
 INSERT INTO notes
-	(title, content, folder_id) VALUES
-		('Paradise Lost', 'Epic poem', 100),
-		('The Stranger', 'Camus on alienation', 103),
-		('David Copperfield', 'Dickensian fiction', 102);
+	(title, content) VALUES
+		('Paradise Lost', 'Epic poem'),
+		('The Stranger', 'Camus on alienation'),
+		('David Copperfield', 'Dickensian fiction'),
+		('Ragtime', '1920 civil rights'),
+		('Lord of the Rings', 'Tolkein trilogy');
 
-CREATE TABLE tags
+-- ALTER SEQUENCE notes.id START WITH 202;
+
+CREATE TABLE authors
 (
 	id serial PRIMARY KEY,
 	name text NOT NULL
@@ -41,15 +30,26 @@ CREATE TABLE tags
 CREATE TABLE notes_tags
 (
 	note_id INTEGER NOT NULL REFERENCES notes ON DELETE CASCADE,
-	tag_id INTEGER NOT NULL REFERENCES tags ON DELETE CASCADE
+	author_name INTEGER NOT NULL REFERENCES authors ON DELETE CASCADE
 );
 
-INSERT INTO tags (name) VALUES
-	('Philip Larkin'),
-	('Emily Dickenson'),
-	('JM Coetzee');
+-- INSERT INTO authors (name) VALUES
+-- 	('John Milton'),
+-- 	('Albert Camus'),
+-- 	('Charles Dickenson'),
+-- 	('E.L. Doctorow'),
+-- 	('JRR Tolkein');
 
-INSERT INTO notes_tags (note_id, tag_id) VALUES
-	(1, 2),
-	(2, 2),
-	(3, 1);
+
+-- INSERT INTO notes_tags (note_id, tag_id) VALUES
+-- 	(1, 2),
+-- 	(2, 2),
+-- 	(3, 1);
+
+CREATE TABLE recaps
+(
+	id serial PRIMARY KEY,
+	summary text NOT NULL,
+	book_id int REFERENCES notes,
+	book_content text REFERENCES notes(content) ON DELETE SET NULL
+);
